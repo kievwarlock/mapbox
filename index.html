@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Supplement geocoding search results from another data source</title>
+    <!--<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />-->
+
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css' type='text/css' />
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.0/mapbox-gl-draw.css' type='text/css'/>
+
+
+    <link rel='stylesheet' href='./dist/css/jquery-ui.min.css' type='text/css' />
+    <link rel='stylesheet' href='./dist/css/jquery-ui.structure.min.css' type='text/css' />
+    <link rel='stylesheet' href='./dist/css/jquery-ui.theme.min.css' type='text/css' />
+    <link rel='stylesheet' href='./dist/css/jquery-ui-timepicker-addon.css' type='text/css' />
+
+    <link rel='stylesheet' href='./dist/colorpicker/css/colorpicker.css' type='text/css' />
+
+    <link rel='stylesheet' href='./dist/css/style-old.css' type='text/css' />
+
+</head>
+<body>
+
+<header class="header">
+    <h1>Advertising profile</h1>
+</header>
+<div class="container">
+
+    <div class="map-block">
+        <div class="map-block-inner">
+            <div id="filter-group" class="filter-group"></div>
+
+            <div class="openstreetmap-search">
+                <form class="openstreetmap-search-block">
+                    <input type="text" class="openstreetmap-search-input search-input" placeholder="Search...">
+                    <button class="openstreetmap-search-submit search-btn">SEARCH</button>
+                </form>
+                <div class="openstreetmap-search-result">
+
+                </div>
+            </div>
+
+            <!--<div id='geocoder' class='geocoder'></div>-->
+            <div class="map">
+                <div id='map'></div>
+            </div>
+        </div>
+
+        <div class="map-content">
+
+
+
+
+            <div class="content-map-editor">
+
+                <!--Тип точки-->
+                <div id="marker-main-type" class="option-item-block map-edit-mode">
+                    <h4>Тип точки:</h4>
+                    <div class="option-item-block-inner">
+                        <label for="main-type-profile">
+                            Профиль компании
+                        </label>
+                        <input type="radio" class="radio-btn" name="main-type" value="profile" id="main-type-profile" checked>
+                        <label for="main-type-event">
+                            Событие ( Буду тут )
+                        </label>
+                        <input type="radio" class="radio-btn" name="main-type" value="event" id="main-type-event" >
+                    </div>
+
+                </div>
+                <div id="marker-name" class="option-item-block map-edit-mode">
+                    <h4>Название</h4>
+                    <div class="option-item-block-inner">
+                        <input type="text" class="style-input" placeholder="название" name="marker-name">
+                    </div>
+                </div>
+                <div id="marker-media" class="option-item-block map-edit-mode">
+                    <h4>Медиа ( фото/видео ):</h4>
+                    <div class="option-item-block-inner">
+                        <input type="file" name="marker-media">
+                    </div>
+
+                </div>
+                <div id="marker-description" class="option-item-block map-edit-mode">
+                    <h4>Описание:</h4>
+                    <div class="option-item-block-inner">
+                        <textarea name="marker-description" ></textarea>
+                    </div>
+
+                </div>
+                <div id="marker-position" class="option-item-block map-edit-mode">
+                    <h4>Выбранные координаты:</h4>
+                    <div class="option-item-block-inner">
+                        <div class="marker-coordinates-xy">
+                            [x,y]:<span id="api-coordinates"></span>
+                        </div>
+                        <div class="marker-coordinates-adress">
+                            Адрес: <span id="api-address"></span>
+                        </div>
+                    </div>
+                </div>
+                <div id="marker-view-type" class="option-item-block map-edit-mode">
+                    <h4>Вид точки:</h4>
+                    <div class="option-item-block-inner">
+                        <label for="type-point">Point</label>
+                        <input type="radio" class="radio-btn" name="marker-type" value="point" id="type-point" >
+                        <label for="type-circle">Circle</label>
+                        <input type="radio" class="radio-btn" name="marker-type" value="circle" id="type-circle" checked>
+                        <!--<label for="type-polygon">Polygon</label>
+                        <input type="radio" class="radio-btn" name="marker-type" value="polygon" id="type-polygon">-->
+                    </div>
+
+                </div>
+                <div id="marker-radius-point" class="option-item-block map-edit-mode">
+                    <h4>Радиус точки:</h4>
+                    <div class="option-item-block-inner">
+                        <div class="size">
+                            <p>
+                                <label for="amount">Метры:</label>
+                                <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                            </p>
+                            <div id="slider-range-min"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="marker-radius-layer" class="option-item-block map-edit-mode">
+                    <h4>Радиус вещания:</h4>
+                    <div class="option-item-block-inner">
+                        <div class="size">
+                            <p>
+                                <label for="amount">Метры:</label>
+                                <input type="text" id="main-amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                            </p>
+                            <div id="main-slider-range-min"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="marker-color" class="option-item-block map-edit-mode">
+                    <h4>Цвет:</h4>
+                    <div class="option-item-block-inner">
+                        <div id="colorSelector"><div></div></div>
+                    </div>
+
+                </div>
+                <div id="marker-link" class="option-item-block map-edit-mode">
+                    <h4>Размещение гиперссылки:</h4>
+                    <div class="option-item-block-inner">
+                        <input type="text" class="style-input" placeholder="ссылка" name="marker-link">
+                    </div>
+
+                </div>
+                <div id="marker-price-per-show" class="option-item-block map-edit-mode">
+                    <h4>Стоимость показа:</h4>
+                    <div class="option-item-block-inner">
+
+                    </div>
+
+                </div>
+                <div id="marker-total-price" class="option-item-block map-edit-mode">
+                    <h4>Бюджет точки:</h4>
+                    <div class="option-item-block-inner">
+
+                    </div>
+
+                </div>
+                <div id="marker-activation-date" class="option-item-block map-edit-mode">
+                    <h4>Время активации:</h4>
+                    <div class="option-item-block-inner">
+                        <input type="text" id="datepicker-main" name="marker-time-activation" placeholder="Время">
+                    </div>
+
+                </div>
+                <div id="marker-target" class="option-item-block map-edit-mode">
+                    <h4>Таргетация:</h4>
+                    <div class="option-item-block-inner">
+
+                        <div class="option-item-block-inner-item">
+                            <div class="option-item-block-inner-title">
+                                Пол:
+                            </div>
+                            <label for="checkbox-man">М</label>
+                            <input type="checkbox" name="checkbox-man" class="checkbox-ui" id="checkbox-man" checked>
+                            <label for="checkbox-women">Ж</label>
+                            <input type="checkbox" name="checkbox-women" class="checkbox-ui" id="checkbox-women" checked>
+                        </div>
+                        <div class="option-item-block-inner-item">
+                            <div class="option-item-block-inner-title">
+                                Возраст:
+                            </div>
+                            <div class="years-old">
+                                <p>
+                                    <label for="amount">От:</label>
+                                    <input type="text" id="years-old-from" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                </p>
+                                <div id="slider-years-old-from"></div>
+                            </div>
+                            <div class="years-old">
+                                <p>
+                                    <label for="amount">До:</label>
+                                    <input type="text" id="years-old-to" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                </p>
+                                <div id="slider-years-old-to"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div id="marker-date-event-begin" class="option-item-block map-edit-mode">
+                    <h4>Время начала:</h4>
+                    <div class="option-item-block-inner">
+                        <input type="text" id="datepicker-event-begin" name="marker-time-activation" placeholder="Время">
+                    </div>
+
+                </div>
+                <div id="marker-date-even-full" class="option-item-block map-edit-mode">
+                    <h4>Длительность:</h4>
+                    <div class="option-item-block-inner">
+                        <input type="text" id="datepicker-event-total" name="marker-time-activation" placeholder="Время">
+                    </div>
+
+                </div>
+                <div id="marker-date-event-preview" class="option-item-block map-edit-mode">
+                    <h4>Показать за:</h4>
+                    <div class="option-item-block-inner">
+                        <input type="text" id="datepicker-event-preview" name="marker-time-activation" placeholder="Время">
+                    </div>
+
+                </div>
+
+
+
+
+                <!--<div class="option-item-block map-edit-mode">
+                    <h4>Edit mode:</h4>
+                    <div class="option-item-block-inner">
+                        <label for="edit-on">On</label>
+                        <input type="radio" class="radio-btn" name="edit-mode" value="true" id="edit-on" checked>
+                        <label for="edit-off">Off</label>
+                        <input type="radio" class="radio-btn" name="edit-mode" value="false" id="edit-off" >
+                    </div>
+
+                </div>-->
+
+                <!--<div class="option-item-block">
+                    <h4>Select type of your Location</h4>
+                    <div class="option-item-block-inner">
+                        <label for="type-point">Point</label>
+                        <input type="radio" class="radio-btn" name="marker-type" value="point" id="type-point">
+                        <label for="type-circle">Circle</label>
+                        <input type="radio" class="radio-btn" name="marker-type" value="circle" id="type-circle">
+                        <label for="type-polygon">Polygon</label>
+                        <input type="radio" class="radio-btn" name="marker-type" value="polygon" id="type-polygon">
+
+
+
+
+                        <div class="map-marker-type-item" data-type="point">
+                            type-point
+                        </div>
+
+
+                        <div class="map-marker-type-item" data-type="circle">
+                            <div class="size">
+                                <p>
+                                    <label for="amount">Диаметр:</label>
+                                    <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                                </p>
+                                <div id="slider-range-min"></div>
+                            </div>
+                        </div>
+
+                        <div class="map-marker-type-item" data-type="polygon">
+                            <fieldset>
+                                <legend>Draw mode: </legend>
+                                <label for="draw-mode-off">Select mode</label>
+                                <input type="radio" class="radio-btn" name="draw-mode" value="false" id="draw-mode-off" >
+                                <label for="draw-mode-on">Draw mode</label>
+                                <input type="radio" class="radio-btn" name="draw-mode" value="true" id="draw-mode-on" checked>
+
+                            </fieldset>
+                        </div>
+                    </div>
+
+                </div>-->
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.0/mapbox-gl-draw.js'></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.min.js'></script>
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+<script src='./dist/js/jquery-ui.js'></script>
+<script src='./dist/js/jquery-ui-timepicker-addon.js'></script>
+
+<script src='./dist/colorpicker/js/colorpicker.js'></script>
+<script src="./dist/js/main.js"></script>
+
+
+</body>
+</html>

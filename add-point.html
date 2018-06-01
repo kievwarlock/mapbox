@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Add point</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.css' type='text/css' />
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.0/mapbox-gl-draw.css' type='text/css'/>
+    <link rel='stylesheet' href='./dist/css/jquery-ui.min.css' type='text/css' />
+    <link rel='stylesheet' href='./dist/css/jquery-ui.structure.min.css' type='text/css' />
+    <link rel='stylesheet' href='./dist/css/jquery-ui.theme.min.css' type='text/css' />
+    <link rel='stylesheet' href='./dist/css/jquery-ui-timepicker-addon.css' type='text/css' />
+    <link rel='stylesheet' href='./dist/colorpicker/css/colorpicker.css' type='text/css' />
+
+
+    <link rel='stylesheet' href='./dist/css/style.css' type='text/css' />
+
+</head>
+<body>
+
+<header class="header">
+    <div class="full-container">
+        <div class="header-inner">
+            <div class="header-logo">
+                <img src="/dist/img/LOGO.png" alt="Logo">
+            </div>
+            <div class="header-info">
+
+                <div class="header-info-message">
+                    <!--msg will be here-->
+                </div>
+                <div class="header-info-user">
+                    <div class="header-info-user-image">
+                        <img src="/dist/img/user-avatar.jpg" alt="">
+                    </div>
+                    <div class="header-info-user-name">
+                        User name
+                    </div>
+                </div>
+                <div class="mobile-nav-init" id="menu-init">
+                    <div class="mobile-nav-init-inner">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+
+    <div class="main-sidebar">
+        <div class="main-sidebar-inner">
+            <div class="sidebar-nav">
+                <ul class="sidebar-nav-menu">
+                    <li>
+                        <a href="#">
+                            DASHBOARD
+                        </a>
+                    </li>
+                    <li class="nav-active">
+                        <a href="#">
+                            ADD NEW
+                        </a>
+                        <ul class="sidebar-nav-menu-child">
+                            <li>
+                                <a href="#">
+                                    Event
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Profile
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            My points
+                        </a>
+                    </li>
+                    <li class="nav-warning">
+                        <a href="#">
+                            Finance
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Statistic
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="sidebar-logout">
+                LOGOUT
+            </div>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="main-container-inner">
+
+            <div class="content-window">
+                <div class="content-window-title">
+                    Add new point
+                </div>
+                <div class="content-window-inner">
+
+                    <div class="flex-block">
+
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                            <div class="content-window-item">
+                                <div class="window-title">Map</div>
+                                <div class="window-description">
+                                    Enter the address in the input field or select on the map
+                                </div>
+
+                                <div class="map-search">
+
+                                    <div class="openstreetmap-search">
+                                        <form class="openstreetmap-search-block">
+                                            <input type="text" class="openstreetmap-search-input search-input window-input" placeholder="Search...">
+                                            <button class="openstreetmap-search-submit search-btn window-btn">SEARCH</button>
+                                        </form>
+                                        <div class="openstreetmap-search-result">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="point-type">
+                                    <div class="window-select">
+
+                                    </div>
+                                </div>
+                                <div id="marker-radius-point" class="window-item-block  window-scroll-input">
+                                    <div class="window-scroll-input-description">
+                                        Radius of point (200 m =  10 000 $)
+                                    </div>
+                                    <div class="window-scroll-input-inner">
+                                        <div class="size">
+                                            <div id="slider-range-min"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="window-map">
+                                    <div class="window-map-inner">
+                                        <div id="map"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                            <div class="window-title">ADD images</div>
+                            <div class="window-description">
+                                Enter the address in the input field or select on the map
+                            </div>
+                            <p>
+                            <div class="window-btn">Publish</div>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!--
+            <div class="content-window">
+                <div class="content-window-title">
+                    Test title
+                </div>
+                <div class="content-window-inner">
+                    <h2>Test</h2>
+                </div>
+            </div>
+            -->
+
+        </div>
+    </div>
+
+</main>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.0/mapbox-gl-draw.js'></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.2.0/mapbox-gl-geocoder.min.js'></script>
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+<script src='./dist/js/jquery-ui.js'></script>
+<script src='./dist/js/jquery-ui-timepicker-addon.js'></script>
+
+<script src='./dist/js/site-scripts.js'></script>
+<script src="./dist/js/main.js"></script>
+
+
+</body>
+</html>
